@@ -7,6 +7,25 @@ class Bevanda {
 	private $price;
 	private $expiring_date;
 
+	use DateFunctions;
+
+	// # # COSTRUTTORI E TO_STRING # #
+	public function __construct ($row) {
+		$this -> setID($row['id']);
+		$this -> setName($row['name']);
+		$this -> setBrand($row['brand']);
+		$this -> setPrice($row['price']);
+		$this -> setExpDate($row['expiring_date']);
+	}
+
+	public function __toString() {
+		return 	"ID: " . $this -> getID() .
+				" | Nome bevanda: " . $this -> getName() .
+				" | Marca: " . $this -> getBrand() .
+				" | Prezzo: " . $this -> getPrice() . "€" .
+				" | Scadenza: " . $this -> getExpDate() . "<br>";
+	}
+
 	// # # FUNZIONI GET E SET # #
 	public function getID() {
 		return $this -> id;
@@ -37,28 +56,20 @@ class Bevanda {
 	}
 
 	public function getExpDate() {
-		return $this -> expiring_adte;
+		return $this -> expiring_date;
 	}
-	public function setExpDate($expiring_adte) {
-		$this -> expiring_adte = $expiring_adte;
-	}
-
-
-	// # # COSTRUTTORI E TOSTRING # #
-	public function __construct ($row) {
-		$this -> setID($row['id']);
-		$this -> setName($row['name']);
-		$this -> setBrand($row['brand']);
-		$this -> setPrice($row['price']);
-		$this -> setExpDate($row['expiring_date']);
+	public function setExpDate($expiring_date) {
+		$correctDateFormat = $this -> getCorrectDateFormat($expiring_date);
+		$this -> expiring_date = $correctDateFormat;
 	}
 
-	public function __toString() {
-		return 	"ID: " . $this -> getID() .
-				" | Nome bevanda: " . $this -> getName() .
-				" | Marca: " . $this -> getBrand() .
-				" | Prezzo: " . $this -> getPrice() . "€" .
-				" | Data di scadenza: " . $this -> getExpDate() . "<br>";
+}
+
+trait DateFunctions {
+	
+	private function getCorrectDateFormat($fullDate) {
+		$dateArray = explode('-', $fullDate);
+		return $dateArray[1] . "/" . $dateArray[0]; 
 	}
 }
 
